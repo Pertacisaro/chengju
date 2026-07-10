@@ -6,7 +6,7 @@ cd chengju
 
 # 2. 复制配置文件，填入自己的 DeepSeek API Key
 cp .env.example .env
-# 用任意编辑器打开 .env，把 sk-your-deepseek-api-key-here 换成自己的 key
+# 用任意编辑器打开 .env，把 your_deepseek_api_key_here 换成自己的 key
 
 # 3. 启动
 node server.js
