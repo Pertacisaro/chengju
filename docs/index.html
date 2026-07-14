@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>澄句 | 日语学习</title>
+    <link rel="stylesheet" href="./styles.css?v=20260620-21" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <nav class="nav-tabs" aria-label="主要页面">
+          <a class="nav-link is-active" href="#analyze" data-route="analyze">拆解</a>
+          <a class="nav-link" href="#notes" data-route="notes">笔记本</a>
+          <a class="nav-link" href="#practice" data-route="practice">练习</a>
+          <a class="nav-link" href="#checkin" data-route="checkin">打卡</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="view is-active" id="view-analyze" data-view="analyze">
+          <div class="page-grid analyze-grid">
+            <section class="panel input-panel">
+              <div class="section-heading">
+                <p>句子拆解</p>
+                <h1>把一句日语慢慢看清楚</h1>
+              </div>
+              <label class="field-label" for="japanese-input">日语原文</label>
+              <textarea
+                id="japanese-input"
+                placeholder="例：君がくれた言葉を、今でもずっと覚えている。"
+              >君がくれた言葉を、今でもずっと覚えている。</textarea>
+              <p class="field-message" id="input-message" aria-live="polite"></p>
+              <div class="action-row">
+                <button class="primary-button" type="button" id="analyze-button">开始拆解</button>
+                <button class="ghost-button" type="button" id="clear-button">清空</button>
+              </div>
+            </section>
+
+            <section class="result-stack">
+              <article class="panel result-card">
+                <div class="result-header">
+                  <span class="status-dot"></span>
+                  <span>拆解结果</span>
+                </div>
+                <div class="empty-state" id="analysis-empty">等待一句想慢慢看懂的日语。</div>
+                <div class="analysis-preview is-hidden" id="analysis-preview">
+                  <section class="analysis-block">
+                    <span class="meta-label">原文 / 罗马音</span>
+                    <div class="ruby-text" id="preview-ruby"></div>
+                  </section>
+
+                  <div class="preview-grid">
+                    <section class="analysis-block">
+                      <span class="meta-label">中文释义</span>
+                      <p id="preview-translation"></p>
+                    </section>
+                  </div>
+
+                  <section class="analysis-block">
+                    <span class="meta-label">句子结构</span>
+                    <p id="preview-structure"></p>
+                  </section>
+
+                  <section class="analysis-block">
+                    <span class="meta-label">动词变形</span>
+                    <div class="verb-list" id="preview-verbs"></div>
+                  </section>
+
+                  <section class="analysis-block">
+                    <span class="meta-label">重点词汇</span>
+                    <div class="table-shell">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>单词</th>
+                            <th>读音</th>
+                            <th>词性</th>
+                            <th>含义</th>
+                          </tr>
+                        </thead>
+                        <tbody id="preview-words"></tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section class="analysis-block">
+                    <span class="meta-label">语法点</span>
+                    <div class="grammar-list" id="preview-grammar"></div>
+                  </section>
+
+                  <div class="save-row">
+                    <button class="primary-button" type="button" id="save-note-button">保存到笔记本</button>
+                    <span id="save-status" aria-live="polite"></span>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="view-notes" data-view="notes">
+          <div class="page-header">
+            <div>
+              <p>Notebook</p>
+              <h1>笔记本</h1>
+            </div>
+            <button class="primary-button" type="button" data-route-jump="analyze">新建笔记</button>
+          </div>
+
+          <section class="panel">
+            <div class="toolbar">
+              <input class="search-input" id="note-search" type="search" placeholder="搜索原句、释义或标签" />
+            </div>
+
+            <div class="note-list" id="note-list"></div>
+          </section>
+
+          <section class="panel wrong-panel">
+            <div class="result-header">
+              <span class="status-dot wrong-dot"></span>
+              <span>错题本</span>
+              <span class="wrong-badge" id="wrong-count"></span>
+            </div>
+            <div class="wrong-list" id="wrong-list"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-practice" data-view="practice">
+          <div class="page-header">
+            <div>
+              <p>Practice</p>
+              <h1>练习</h1>
+            </div>
+            <button class="primary-button" type="button" id="start-practice-button">开始练习</button>
+          </div>
+
+          <section class="panel practice-layout is-hidden" id="practice-panel">
+            <div class="practice-card" id="practice-card">
+              <div class="progress-line">
+                <span id="practice-progress-label">准备开始</span>
+                <strong id="practice-progress-count">0 / 5</strong>
+              </div>
+              <h2 id="practice-question">保存几条笔记后，就可以开始 5 道选词填空。</h2>
+              <div class="option-grid" id="practice-options">
+                <button type="button" disabled>选项</button>
+                <button type="button" disabled>选项</button>
+                <button type="button" disabled>选项</button>
+                <button type="button" disabled>选项</button>
+              </div>
+              <p class="practice-explanation" id="practice-explanation" aria-live="polite"></p>
+              <div class="practice-actions">
+                <button class="primary-button is-hidden" type="button" id="next-question-button">下一题</button>
+              </div>
+            </div>
+
+            <aside class="practice-side">
+              <h2>本轮状态</h2>
+              <div class="stat-row">
+                <span>题目数量</span>
+                <strong id="practice-total">5</strong>
+              </div>
+              <div class="stat-row">
+                <span>错题重做</span>
+                <strong id="practice-redo-status">待开始</strong>
+              </div>
+              <div class="stat-row">
+                <span>本轮正确</span>
+                <strong id="practice-correct-count">0</strong>
+              </div>
+            </aside>
+          </section>
+        </section>
+
+        <section class="view" id="view-checkin" data-view="checkin">
+          <div class="page-header">
+            <div>
+              <p>Calendar</p>
+              <h1>打卡</h1>
+            </div>
+            <div class="month-switch">
+              <button type="button" aria-label="上个月">‹</button>
+              <strong>2026 年 6 月</strong>
+              <button type="button" aria-label="下个月">›</button>
+            </div>
+          </div>
+
+          <section class="panel calendar-panel">
+            <div class="calendar-stats">
+              <div>
+                <span>本月完成</span>
+                <strong id="monthly-checkin-count">0 天</strong>
+              </div>
+              <div>
+                <span>连续打卡</span>
+                <strong id="streak-checkin-count">0 天</strong>
+              </div>
+            </div>
+
+            <div class="calendar-grid" aria-label="本月打卡日历">
+              <span class="weekday">一</span>
+              <span class="weekday">二</span>
+              <span class="weekday">三</span>
+              <span class="weekday">四</span>
+              <span class="weekday">五</span>
+              <span class="weekday">六</span>
+              <span class="weekday">日</span>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop is-hidden" id="note-modal" role="dialog" aria-modal="true" aria-labelledby="note-modal-title">
+      <article class="modal-panel">
+        <header class="modal-header">
+          <div>
+            <p>Note Detail</p>
+            <h2 id="note-modal-title">笔记详情</h2>
+          </div>
+          <button class="icon-button" type="button" id="close-note-modal" aria-label="关闭详情">×</button>
+        </header>
+
+        <div class="modal-body" id="note-detail"></div>
+
+        <footer class="modal-footer">
+          <label class="field-label" for="tag-editor">标签</label>
+          <div class="tag-editor-row">
+            <input class="search-input" id="tag-editor" type="text" placeholder="用逗号分隔，例如：歌词, 动词" />
+            <button class="primary-button" type="button" id="save-tags-button">保存标签</button>
+          </div>
+          <p class="field-message" id="tag-message" aria-live="polite"></p>
+        </footer>
+      </article>
+    </div>
+
+    <script src="./app.js?v=20260620-18"></script>
+  </body>
+</html>
